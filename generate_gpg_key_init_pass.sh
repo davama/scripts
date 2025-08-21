@@ -2,7 +2,11 @@
 
 # generate a gpg key and init pass store
 
+export GPG_TTY=$(tty)
 rm -rf ~/.gnupg ~/.password-store
+gpgconf --kill gpg-agent
+gpg-connect-agent reloadagent /bye
+gpg-connect-agent updatestartuptty /bye
 
 # Prompt the user for a password, hiding the input
 read -s -p "Enter passphrase for your new gpg key: " passphrase
@@ -18,6 +22,7 @@ echo "You entered: $comment"
 gpg --batch --passphrase $passphrase --quick-generate-key "$fullname ($comment) <$email>" ed25519 cert never
 
 cat >~/.gnupg/gpg-agent.conf <<EOF
+pinentry-program $(which pinentry)
 # Don't ask gnome-keyring for password
 no-allow-external-cache
 EOF
