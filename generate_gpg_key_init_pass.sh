@@ -23,6 +23,7 @@ gpg --batch --passphrase $passphrase --quick-generate-key "$fullname ($comment) 
 
 cat >~/.gnupg/gpg-agent.conf <<EOF
 pinentry-program $(which pinentry)
+enable-ssh-support
 # Don't ask gnome-keyring for password
 no-allow-external-cache
 EOF
