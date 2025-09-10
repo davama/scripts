@@ -1,6 +1,10 @@
 #!/bin/bash
+# This script will
+# 1. Remove all existing GPG keys and password store
+# 2. Generate a new GPG key with subkeys for signing, encryption, and authentication
+# 3. Initialize a new password store using the newly created GPG key
 
-# generate a gpg key and init pass store
+set -e
 
 export GPG_TTY=$(tty)
 rm -rf ~/.gnupg ~/.password-store
@@ -23,7 +27,6 @@ gpg --batch --passphrase $passphrase --quick-generate-key "$fullname ($comment) 
 
 cat >~/.gnupg/gpg-agent.conf <<EOF
 pinentry-program $(which pinentry)
-enable-ssh-support
 # Don't ask gnome-keyring for password
 no-allow-external-cache
 EOF

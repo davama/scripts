@@ -1,4 +1,13 @@
 #!/bin/bash
+# Source: https://www.passwordstore.org/
+# GPG export and import functions for password-store
+# Usage:
+# gpg_export_password-store
+# gpg_import_password-store <file>
+# Example:
+# gpg_export_password-store
+# gpg_import_password-store password-store-backup.tar.gz.gpg
+# Note: This script assumes you have GPG and password-store installed and configured.
 
 function gpg_export_password-store () {
 	cd

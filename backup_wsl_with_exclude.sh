@@ -1,6 +1,11 @@
 #!/bin/bash
+set -e
 
-# create a backup of the wsl but excluding files/directories
+# Ensure the script is run with sudo
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root"
+    exit
+fi
 
 user=$(echo $USER | tr '[:lower:]' '[:upper:]')
 sudo tar \
