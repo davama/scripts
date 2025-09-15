@@ -9,9 +9,18 @@ set -e
 export GPG_TTY=$(tty)
 rm -rf ~/.gnupg ~/.password-store
 gpgconf --kill gpg-agent
+mkdir -p ~/.gnupg
+chmod 700 ~/.gnupg
+touch ~/.gnupg/gpg.conf
+chmod 600 ~/.gnupg/gpg.conf
+touch ~/.gnupg/gpg-agent.conf
+chmod 600 ~/.gnupg/gpg-agent.conf
+# Ensure gpg-agent is running
+gpgconf --launch gpg-reloadagent
+
 gpg-connect-agent reloadagent /bye
 gpg-connect-agent updatestartuptty /bye
-
+which pinentry || { echo "pinentry not found, please install it"; exit 1; }
 # Prompt the user for a password, hiding the input
 read -s -p "Enter passphrase for your new gpg key: " passphrase
 echo "You entered: $passphrase"
@@ -44,10 +53,10 @@ for i in $(gpg --list-secret-keys --with-colons --fingerprint | sed -n 's/^fpr::
     sleep 2
     gpg --batch --passphrase $passphrase --quick-add-key $KEYFP ed25519 auth 1y
 done
-
+# list keys
 echo show key
 gpg -K
-
+# export public key
 # init pass store using new key
 pass init $(gpg --list-secret-keys --with-colons --fingerprint | sed -n 's/^fpr:::::::::\([[:alnum:]]\+\):/\1/p')
 
